@@ -7,7 +7,7 @@ canvas.height = 576;
 
 c.fillRect(0, 0, canvas.width, canvas.height); 
 
-const gravity = 0.2
+const gravity = 0.7
 
 // Using OOP to ensure that avatars can interact and have different attributes -- Ex. Position, velocity
 class Sprite{
@@ -78,8 +78,6 @@ const keys = { //
     }
 }
 
-let lastKey 
-
 // Animation Loops, call for position and velocty updates
 function animate() {
     window.requestAnimationFrame(animate);
@@ -89,19 +87,20 @@ function animate() {
     enemy.update();
 
     player.velocity.x = 0;  // Created a responisve and functional movement system to inputs are interpretted correctly
+    enemy.velocity.x = 0;
 
     // Main Player movement
-    if(keys.a.pressed && lastKey === 'a') {
-        player.velocity.x = -1;
-    } else if (keys.d.pressed && lastKey === 'd') {
-        player.velocity.x = 1;
+    if(keys.a.pressed && player.lastKey === 'a') {
+        player.velocity.x = -5;
+    } else if (keys.d.pressed && player.lastKey === 'd') {
+        player.velocity.x = 5;
     }
 
     //Enemy Player movement
-    if(keys.ArrowLeft.pressed && lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -1;
-    } else if (keys.ArrowRight.pressed && lastKey === 'ArrowRight') {
-        enemy.velocity.x = 1;
+    if(keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -5;
+    } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+        enemy.velocity.x = 5;
     }
 }
 
@@ -116,16 +115,16 @@ window.addEventListener('keydown' , (event) => {
     switch (event.key){ //Main Player controls
         case 'a':
             keys.a.pressed = true;
-            lastKey = 'a'
+            player.lastKey = 'a'
             break
 
         case 'd':
             keys.d.pressed = true;
-            lastKey = 'd'
+            player.lastKey = 'd'
             break
             
         case 'w':
-            player.velocity.y = -10;
+            player.velocity.y = -20;
             break  
 
         // Enemy player controls
@@ -140,7 +139,7 @@ window.addEventListener('keydown' , (event) => {
             break
             
         case 'ArrowUp':
-            enemy.velocity.y = -10;
+            enemy.velocity.y = -20;
             break  
     }
     console.log(event.key);
