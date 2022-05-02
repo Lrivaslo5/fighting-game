@@ -23,7 +23,7 @@ const shop = new Sprite({ // this will use the specified image as background
     },
     imageSrc: './img/shop.png',
     scale: 2.65,
-    maxFrames: 6
+    maxFrames: 6,
 })
 
 
@@ -41,7 +41,14 @@ const player = new Fighter({
         x: 0,
         y: 0
     },
-    color: 'yellow'
+    color: 'yellow',
+    imageSrc: 'img/Manzo/Idle.png',
+    maxFrames: 8,
+    scale: 2.5,
+    offset: {
+        x: 150,
+        y: 110
+    }
 })
 
 const enemy = new Fighter({
