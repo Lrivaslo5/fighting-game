@@ -16,6 +16,17 @@ const background = new Sprite({ // this will use the specified image as backgrou
     },
     imageSrc: './img/background.png'
 })
+const shop = new Sprite({ // this will use the specified image as background
+    position: {
+        x: 620,
+        y: 140
+    },
+    imageSrc: './img/shop.png',
+    scale: 2.65,
+    maxFrames: 6
+})
+
+
 
 const player = new Fighter({ 
     position: {
@@ -74,10 +85,11 @@ decreasetime();
 // Animation Loops, call for position and velocty updates
 function animate() {
     window.requestAnimationFrame(animate);
-    c.fillStyle = 'black'
+    c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height); // Clears canvas to create a new unique frame for animation
     background.update(); // calling to establish background image
     player.update();
+    shop.update();
     enemy.update();
 
     player.velocity.x = 0;  // Created a responisve and functional movement system to inputs are interpretted correctly

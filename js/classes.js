@@ -1,17 +1,44 @@
 class Sprite{
-    constructor({position, imageSrc}){ 
+    constructor({position, imageSrc, scale = 1 , maxFrames = 1 }){ 
         this.position  = position; 
         this.height = 150;
         this.width = 50;
         this.image = new Image(); //creates image within JS using native API object
         this.image.src = imageSrc; //specify source of image we are creating
-        }
+        this.scale = scale;
+        this.maxFrames = maxFrames;
+        this.numFrames = 0; //allows you to dtermine the nuymber of frames you will be moving animation by
+        this.framesElapsed = 0;
+        this.framesTime = 5; // determines time between frame transtion for animation
+    }
 
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y) // creates image using the size of determined above
+        c.drawImage( // creates image using the size of determined above
+            this.image,
+            this.numFrames * (this.image.width / this.maxFrames),  // Illustrated here, move by frames determined in "Sprite" object
+            0,
+            this.image.width / this.maxFrames,  // cropping image to allow us to move throguh images and create animation
+            this.image.height,
+            this.position.x, 
+            this.position.y, 
+            (this.image.width / this.maxFrames) * this.scale,  // divided by the number of frames
+            this.image.height * this.scale
+        ) 
     }
     update() {  
         this.draw();
+        this.framesElapsed++;
+        if(this.framesElapsed % this.framesTime === 0) { // allows for time between frame transition
+            if (this.numFrames < this.maxFrames - 1){
+                this.numFrames++      
+            } else {
+                this.numFrames = 0;
+            }
+        }
+
+      
+        
+      
     }
 }
 
@@ -21,7 +48,7 @@ class Fighter{
     constructor({position, velocity, color, offset}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
         this.position  = position; // instance of object destructuing allows for cleaner syntax and same functionality
         this.velocity = velocity;
-        this.height = 150;
+        this.height = 160;
         this.width = 50;
         this.lastKey;
         this.attackBox = {
@@ -53,7 +80,7 @@ class Fighter{
         
         // Attack Box creation
         if(this.isAttacking){
-            c.fillStyle = 'green'
+            c.fillStyle = 'red'
             c.fillRect(
                 this.attackBox.position.x, 
                 this.attackBox.position.y, 
@@ -71,7 +98,7 @@ class Fighter{
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y; 
         
-        if(this.position.y + this.height >= canvas.height - 98) { // Adding a floor to stop velocity change
+        if(this.position.y + this.height >= canvas.height - 99) { // Adding a floor to stop velocity change
             this.velocity.y = 0;
         } else 
         this.velocity.y += gravity // increase of Y-velocity allows for use to simulate gravity
