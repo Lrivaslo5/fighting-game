@@ -11,37 +11,55 @@ const gravity = 0.7
 
 // Using OOP to ensure that avatars can interact and have different attributes -- Ex. Position, velocity
 class Sprite{
-    constructor({position, velocity, color}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
+    constructor({position, velocity, color, offset}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
         this.position  = position; // instance of object destructuing allows for cleaner syntax and same functionality
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
         this.lastKey;
         this.attackBox = {
-            position: this.position,
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
+            offset,
             width: 100,
             height: 50
         }
         this.color = color;
+        this.isAttacking;
     }
+
+    attack(){ // attack module disactivates attacking state after 100 ms
+        this.isAttacking = true
+        setTimeout(() => {
+            this.isAttacking = false
+        }, 100)
+    }
+
+
 
     draw() {
         c.fillStyle = this.color;
         c.fillRect(this.position.x, this.position.y, 50, this.height);
-     // Attack Box creation
-     c.fillStyle = 'green'
-        c.fillRect(
-            this.attackBox.position.x, 
-            this.attackBox.position.y, 
-            this.attackBox.width, 
-            this.attackBox.height
-         )
+        
+        // Attack Box creation
+        if(this.isAttacking){
+            c.fillStyle = 'green'
+            c.fillRect(
+                this.attackBox.position.x, 
+                this.attackBox.position.y, 
+                this.attackBox.width, 
+                this.attackBox.height
+            )
+        }
     }
 
 
     update() { //This function will be used in the animation section to create a new frame for each loop
         this.draw();
-
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
+        this.attackBox.position.y = this.position.y;
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y; 
         
@@ -61,6 +79,10 @@ const player = new Sprite({
         x: 0,
         y: 0
     },
+    offset: {
+        x: 0,
+        y: 0
+    },
     color: 'yellow'
 })
 
@@ -71,6 +93,10 @@ const enemy = new Sprite({
     },
     velocity: {
         x: 0,
+        y: 0
+    },
+    offset: {
+        x: -50,
         y: 0
     },
     color: 'blue'
@@ -121,12 +147,17 @@ function animate() {
         enemy.velocity.x = 5;
     }
 
-    // Collison detection module 
-    if(player.attackBox.position.x + player.attackBox.width >= enemy.position.x && player.attackBox.position.x <= enemy.position.x + enemy.width){
-        console.log('hit')
-         
-    }
-    
+    // Collison detection module -- only when attack box is overlapping enemy sprite x and y axis considered
+    if(
+        player.attackBox.position.x + player.attackBox.width >= enemy.position.x && 
+        player.attackBox.position.x <= enemy.position.x + enemy.width &&
+        player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
+        player.attackBox.position.y <= enemy.position.y + enemy.height &&
+        player.isAttacking
+    )   {
+        player.isAttacking = false;
+        console.log('hit');   
+    }    
 }
 
 
@@ -152,6 +183,10 @@ window.addEventListener('keydown' , (event) => {
         case 'w':
             player.velocity.y = -20;
             break  
+        
+        case ' ':
+            player.attack();
+            break
 
         // Enemy player controls
         case 'ArrowRight':  
