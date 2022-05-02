@@ -28,6 +28,7 @@ class Sprite{
         }
         this.color = color;
         this.isAttacking;
+        this.health = 100;
     }
 
     attack(){ // attack module disactivates attacking state after 100 ms
@@ -166,6 +167,8 @@ function animate() {
         player.isAttacking
     ){
         player.isAttacking = false;
+        enemy.health -= 20;
+        document.querySelector('#enemy-health').style.width = enemy.health + "%";
         console.log('hit');   
     } 
     if(
@@ -176,6 +179,8 @@ function animate() {
         enemy.isAttacking
     ){
     enemy.isAttacking = false;
+    player.health -= 20;
+    document.querySelector('#player-health').style.width = player.health + "%";
     console.log('enemy hit you');  
     }
 }
