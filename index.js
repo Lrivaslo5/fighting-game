@@ -11,17 +11,33 @@ const gravity = 0.7
 
 // Using OOP to ensure that avatars can interact and have different attributes -- Ex. Position, velocity
 class Sprite{
-    constructor({position, velocity}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
+    constructor({position, velocity, color}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
         this.position  = position; // instance of object destructuing allows for cleaner syntax and same functionality
         this.velocity = velocity;
         this.height = 150;
+        this.width = 50;
         this.lastKey;
+        this.attackBox = {
+            position: this.position,
+            width: 100,
+            height: 50
+        }
+        this.color = color;
     }
 
     draw() {
-        c.fillStyle = 'red';
+        c.fillStyle = this.color;
         c.fillRect(this.position.x, this.position.y, 50, this.height);
+     // Attack Box creation
+     c.fillStyle = 'green'
+        c.fillRect(
+            this.attackBox.position.x, 
+            this.attackBox.position.y, 
+            this.attackBox.width, 
+            this.attackBox.height
+         )
     }
+
 
     update() { //This function will be used in the animation section to create a new frame for each loop
         this.draw();
@@ -44,7 +60,8 @@ const player = new Sprite({
     velocity: {
         x: 0,
         y: 0
-    }
+    },
+    color: 'yellow'
 })
 
 const enemy = new Sprite({
@@ -55,7 +72,8 @@ const enemy = new Sprite({
     velocity: {
         x: 0,
         y: 0
-    }
+    },
+    color: 'blue'
 })
 
 
@@ -102,7 +120,15 @@ function animate() {
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5;
     }
+
+    // Collison detection module 
+    if(player.attackBox.position.x + player.attackBox.width >= enemy.position.x && player.attackBox.position.x <= enemy.position.x + enemy.width){
+        console.log('hit')
+         
+    }
+    
 }
+
 
 
 
