@@ -23,11 +23,15 @@
                 <div id = "player-health" style = "position: absolute; background: blue; top: 0; right: 0; bottom: 0; width: 100% "></div>
             </div>
             <!-- Timer -->
-            <div style = "
+            <div id ="clock" style = "
             background-color: yellow;
+            display: flex;
             width: 100px;
             height: 100px;
-            flex-shrink: 0;"></div>
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            ">10</div>
             <!-- Enemy health bar -->
             <div style = "position: relative; height: 30px; width: 100%;">
                 <div style = "background-color: orange; height: 30px;"></div>
@@ -35,6 +39,17 @@
             </div>
             <div></div>
         </div>
+        <div id="display-message" style = "
+        position: absolute; 
+        color:white; 
+        align-items: center; 
+        justify-content: center;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: none;
+        "> Tie! </div>
         <canvas></canvas>
     </div>
     <script src ="index.js"> </script>

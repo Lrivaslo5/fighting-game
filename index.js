@@ -8,9 +8,19 @@ canvas.height = 576;
 c.fillRect(0, 0, canvas.width, canvas.height); 
 
 const gravity = 0.7
-
-// Using OOP to ensure that avatars can interact and have different attributes -- Ex. Position, velocity
 class Sprite{
+    constructor({position}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
+        this.position  = position; // instance of object destructuing allows for cleaner syntax and same functionality
+        this.height = 150;
+        this.width = 50;
+        }
+    draw() {}
+    update() { //This function will be used in the animation section to create a new frame for each loop
+        this.draw();
+    }
+}
+// Using OOP to ensure that avatars can interact and have different attributes -- Ex. Position, velocity
+class Fighter{
     constructor({position, velocity, color, offset}){ // position/velcoity are passed as an object to minimze importance of order and allows for only one to be passed if needed
         this.position  = position; // instance of object destructuing allows for cleaner syntax and same functionality
         this.velocity = velocity;
@@ -71,7 +81,7 @@ class Sprite{
     }
 }
 
-const player = new Sprite({
+const player = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -87,7 +97,7 @@ const player = new Sprite({
     color: 'yellow'
 })
 
-const enemy = new Sprite({
+const enemy = new Fighter({
     position: {
         x: 400,
         y: 100
@@ -132,6 +142,37 @@ const keys = { //
         rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height 
     );
 }
+
+function determineWinner({player, enemy, clockId}){
+    clearTimeout(clockId);
+    document.querySelector('#display-message').style.display = "flex";
+    if(player.health === enemy.health) {
+        document.querySelector('#display-message').innerHTML = "Tie!";
+    } 
+    if(player.health > enemy.health) {
+        document.querySelector('#display-message').innerHTML = "Player 1 Wins!";
+    }   
+    if(player.health < enemy.health) {
+        document.querySelector('#display-message').innerHTML = "Player 2 Wins!";
+    }               
+}
+
+
+// Countdown timer to determine game winner
+let clock = 15;
+let clockId;
+function decreasetime(){
+    if(clock > 0){
+        clockId = setTimeout(decreasetime, 1000);
+        clock--;
+        document.querySelector('#clock').innerHTML = clock;
+    }
+    if(clock === 0){
+        determineWinner({player, enemy, clockId});
+    }
+}
+
+decreasetime();
 
 // Animation Loops, call for position and velocty updates
 function animate() {
@@ -183,10 +224,13 @@ function animate() {
     document.querySelector('#player-health').style.width = player.health + "%";
     console.log('enemy hit you');  
     }
+
+    // Game ending based on health
+    if (enemy.health <= 0 || player.health <= 0){
+        determineWinner({player, enemy, clockId});
+    }
+
 }
-
-
-
 
 
 animate();
@@ -247,7 +291,7 @@ window.addEventListener('keyup' , (event) => {
  
     }
 
-// Enemy keys
+// Enemy keys to stop actions after lifting keys
     switch (event.key){
         case 'ArrowRight':
             keys.ArrowRight.pressed = false;
