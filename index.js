@@ -24,7 +24,10 @@ class Sprite{
 
     update() { //This function will be used in the animation section to create a new frame for each loop
         this.draw();
+
+        this.position.x += this.velocity.x;
         this.position.y += this.velocity.y; 
+        
         if(this.position.y + this.height >= canvas.height) { // Adding a floor to stop velocity change
             this.velocity.y = 0;
         } else 
@@ -58,17 +61,66 @@ const enemy = new Sprite({
 
 console.log(player);
 
+
+const keys = { // 
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    }
+}
+
+let lastKey 
+
 // Animation Loop, calls for position and velocty update
 
 function animate() {
     window.requestAnimationFrame(animate);
-    c.fillStyle = 'black' // e
+    c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width, canvas.height); // Clears canvas to create a new unique frame for animation
     player.update();
     enemy.update();
-    
+
+    player.velocity.x = 0;  // Created a responisve and funvtional movement system to inputs are interpretted correctly
+
+    if(keys.a.pressed && lastKey === 'a') {
+        player.velocity.x = -1;
+    } else if (keys.d.pressed && lastKey === 'd') {
+        player.velocity.x = 1;
+    }
+
 }
+
 
 animate();
 
+// Creating Player Movement using event listeners
 
+window.addEventListener('keydown' , (event) => {
+    switch (event.key){
+        case 'a':
+            keys.a.pressed = true;
+            lastKey = 'a'
+            break
+
+        case 'd':
+            keys.d.pressed = true;
+            lastKey = 'd'
+            break
+    }
+    console.log(event.key);
+})
+
+window.addEventListener('keyup' , (event) => {
+    switch (event.key){
+        case 'a':
+            keys.a.pressed = false;
+            break
+
+        case 'd':
+            keys.d.pressed = false;
+            break
+    }
+    console.log(event.key);
+})
