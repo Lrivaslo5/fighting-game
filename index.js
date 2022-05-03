@@ -229,8 +229,10 @@ function animate() {
     ){ // enemy is hit
         enemy.hit();
         player.isAttacking = false;
-        document.querySelector('#enemy-health').style.width = enemy.health + "%";
-        console.log('hit');   
+        console.log('hit');  
+        gsap.to('#enemy-health', {  //using GSEP animations
+            width: enemy.health + '%'
+        })
     } 
 
     // if player misses, reset "is attacking" condition
@@ -249,8 +251,9 @@ function animate() {
         ){ // player is hit
             player.hit();
             enemy.isAttacking = false;
-            document.querySelector('#player-health').style.width = player.health + "%";
-            console.log('enemy hit you');  
+            gsap.to('#player-health', {  //using GSEP animations
+                width: player.health + '%'
+            })
     }
 
     // if enemy misses, reset "is attacking" condition
