@@ -84,30 +84,28 @@ const enemy = new Fighter({
     scale: 2.5,
     offset: {
         x: 150,
-        y: 105
+        y: 157
     },
-    imageSrc: './img/Ocky/Idle.png',
-    maxFrames: 4,
     sprites: {
         idle: {
-            imageSrc: 'img/Ocky/Idle.png',
-            maxFrames: 8
+            imageSrc: 'img/mazo-alt/Idle.png',
+            maxFrames: 4
         },
         run: {
-            imageSrc: 'img/Ocky/Run.png',
+            imageSrc: 'img/mazo-alt/Run.png',
             maxFrames: 8
         },
         jump: {
-            imageSrc: 'img/Ocky/Jump.png',
+            imageSrc: 'img/mazo-alt/Jump.png',
             maxFrames: 2
         },
         fall: {
-            imageSrc: 'img/Ocky/Fall.png',
+            imageSrc: 'img/mazo-alt/Fall.png',
             maxFrames: 2
         },
         attack1: {
-            imageSrc: 'img/Ocky/Attack1.png',
-            maxFrames: 4
+            imageSrc: 'img/mazo-alt/Attack1.png',
+            maxFrames: 6
         }
     }
 })
@@ -142,7 +140,7 @@ function animate() {
     background.update(); // calling to establish background image
     player.update();
     shop.update();
-    //enemy.update();
+    enemy.update();
 
     player.velocity.x = 0;  // Created a responisve and functional movement system to inputs are interpretted correctly
     enemy.velocity.x = 0;
@@ -159,20 +157,32 @@ function animate() {
         player.switchSpriteframes('idle');
     }
 
-    //Enemy Player movement
-
-    if(keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5;
-    } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x = 5;
-    }
-
     //Animate jump movement when jumping, also when falling
     if (player.velocity.y < 0){ 
         player.switchSpriteframes('jump');
     } else if (player.velocity.y > 0) {
         player.switchSpriteframes('fall');
     }
+
+    //Enemy Player movement
+
+    if(keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -5;
+        enemy.switchSpriteframes('run');
+    } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+        enemy.velocity.x = 5;
+        enemy.switchSpriteframes('run');
+    } else{
+        enemy.switchSpriteframes('idle');
+    }
+
+    //Animate enemy jump movement when jumping, also when falling
+    if (enemy.velocity.y < 0){ 
+        enemy.switchSpriteframes('jump');
+    } else if (enemy.velocity.y > 0) {
+        enemy.switchSpriteframes('fall');
+    }
+    
 
     // Collison detection module -- only when attack box is overlapping enemy sprite x and y axis considered
     if(
