@@ -173,6 +173,8 @@ function animate() {
     background.update(); // calling to establish background image
     player.update();
     shop.update();
+    c.fillStyle = 'rgba( 255, 255, 255, 0.1)'
+    c.fillRect(0,0, canvas.width, canvas.height)
     enemy.update();
 
     player.velocity.x = 0;  // Created a responisve and functional movement system to inputs are interpretted correctly
