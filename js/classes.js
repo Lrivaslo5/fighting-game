@@ -113,13 +113,20 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
     }
 
     attack(){ // attack module disactivates attacking state after 100 ms
-        this.isAttacking = true
+        this.switchSpriteframes('attack1');
+        this.isAttacking = true;
         setTimeout(() => {
-            this.isAttacking = false
+            this.isAttacking = false;
         }, 100)
     }
 
     switchSpriteframes(sprite){
+        if (this.image === this.sprites.attack1.image && 
+            this.numFrames < this.sprites.attack1.framesMax-1
+            )
+            
+            return;  
+
         switch (sprite){
             case 'idle':
                 if (this.image != this.sprites.idle.image){
@@ -151,8 +158,16 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
                     this.numFrames = 0;
                 }
                 break;
-        }
-    }
 
+            case 'attack1':
+                if(this.image != this.sprites.attack1.image) {
+                    this.image = this.sprites.attack1.image;
+                    this.maxFrames = this.sprites.attack1.maxFrames;
+                    this.numFrames = 0;
+                }
+                break;
+        }
+        
+    }
 
 }
