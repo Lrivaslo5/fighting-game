@@ -37,10 +37,6 @@ const player = new Fighter({
         x: 0,
         y: 0
     },
-    offset: {
-        x: 0,
-        y: 0
-    },
     color: 'yellow',
     scale: 2.5,
     offset: {
@@ -84,7 +80,36 @@ const enemy = new Fighter({
         x: -50,
         y: 0
     },
-    color: 'blue'
+    color: 'blue',
+    scale: 2.5,
+    offset: {
+        x: 150,
+        y: 105
+    },
+    imageSrc: './img/Ocky/Idle.png',
+    maxFrames: 4,
+    sprites: {
+        idle: {
+            imageSrc: 'img/Ocky/Idle.png',
+            maxFrames: 8
+        },
+        run: {
+            imageSrc: 'img/Ocky/Run.png',
+            maxFrames: 8
+        },
+        jump: {
+            imageSrc: 'img/Ocky/Jump.png',
+            maxFrames: 2
+        },
+        fall: {
+            imageSrc: 'img/Ocky/Fall.png',
+            maxFrames: 2
+        },
+        attack1: {
+            imageSrc: 'img/Ocky/Attack1.png',
+            maxFrames: 4
+        }
+    }
 })
 
 
