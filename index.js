@@ -63,7 +63,16 @@ const player = new Fighter({
         attack1: {
             imageSrc: 'img/Manzo/Attack1.png',
             maxFrames: 4
-        }
+        },
+        hit: {
+            imageSrc: 'img/Manzo/Take hit - white silhouette.png',
+            maxFrames: 4
+        },
+        death: {
+            imageSrc: 'img/Manzo/Death.png',
+            maxFrames: 6
+        },
+
     },
     attackBox: {
         offset: {
@@ -114,7 +123,15 @@ const enemy = new Fighter({
         attack1: {
             imageSrc: 'img/mazo-alt/Attack1.png',
             maxFrames: 4
-        }
+        },
+        hit: {
+            imageSrc: 'img/mazo-alt/Take hit.png',
+            maxFrames: 3
+        },
+        death: {
+            imageSrc: 'img/mazo-alt/Death.png',
+            maxFrames: 7
+        },
     },
     attackBox: {
         offset: {
@@ -207,9 +224,9 @@ function animate() {
             rectangle2: enemy
         }) &&
         player.isAttacking && player.numFrames === 2
-    ){
+    ){ // enemy is hit
+        enemy.hit();
         player.isAttacking = false;
-        enemy.health -= 15;
         document.querySelector('#enemy-health').style.width = enemy.health + "%";
         console.log('hit');   
     } 
@@ -219,7 +236,7 @@ function animate() {
         player.isAttacking = false;
     }
 
-//Enemy conllision detection module
+//Enemy collision detection module
 
     if(
         rectangularCollision({
@@ -227,11 +244,11 @@ function animate() {
             rectangle2: player
         }) &&
         enemy.isAttacking && enemy.numFrames === 2
-    ){
-    enemy.isAttacking = false;
-    player.health -= 15;
-    document.querySelector('#player-health').style.width = player.health + "%";
-    console.log('enemy hit you');  
+        ){ // player is hit
+            player.hit();
+            enemy.isAttacking = false;
+            document.querySelector('#player-health').style.width = player.health + "%";
+            console.log('enemy hit you');  
     }
 
     // if enemy misses, reset "is attacking" condition
@@ -252,6 +269,31 @@ animate();
 // Creating Player Movement using event listeners
 
 window.addEventListener('keydown' , (event) => { 
+    if (!enemy.dead){
+
+        switch(event.key){
+                // Enemy player controls
+            case 'ArrowRight':  
+                keys.ArrowRight.pressed = true;
+                enemy.lastKey = 'ArrowRight';
+                break
+
+            case 'ArrowLeft': 
+                keys.ArrowLeft.pressed = true;
+                enemy.lastKey = 'ArrowLeft';
+                break
+                
+            case 'ArrowUp':
+                enemy.velocity.y = -20; 
+                break
+
+            case 'ArrowDown':
+            enemy.attack()
+            break 
+        }
+    }
+
+    if (!player.dead){
     switch (event.key){ //Main Player controls
         case 'a':
             keys.a.pressed = true;
@@ -270,27 +312,9 @@ window.addEventListener('keydown' , (event) => {
         case ' ':
             player.attack();
             break
-
-        // Enemy player controls
-        case 'ArrowRight':  
-            keys.ArrowRight.pressed = true;
-            enemy.lastKey = 'ArrowRight';
-            break
-
-        case 'ArrowLeft': 
-            keys.ArrowLeft.pressed = true;
-            enemy.lastKey = 'ArrowLeft';
-            break
-            
-        case 'ArrowUp':
-            enemy.velocity.y = -20;
-            break
-
-        case 'ArrowDown':
-           enemy.attack()
-           break 
+    
+        }
     }
-    console.log(event.key);
 })
 
 window.addEventListener('keyup' , (event) => {

@@ -89,6 +89,7 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
         this.framesElapsed = 0;
         this.framesTime = 5; 
         this.sprites = sprites;
+        this.dead = false;
 
         for(const sprite in this.sprites){ //Looping through object
             sprites[sprite].image = new Image(); // sprite here is object key
@@ -98,7 +99,7 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
 
     update() { //This function will be used in the animation section to create a new frame for each loop
         this.draw();
-        this.animateFrames();
+        if(this.dead == false) this.animateFrames();
 
         //Attack box configurations
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
@@ -120,10 +121,29 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
         this.isAttacking = true;
     }
 
+    hit(){
+        this.health -= 20;
+
+        if(this.health <= 0){
+            this.switchSpriteframes('death');
+        }else  this.switchSpriteframes('hit');
+    }
+
     switchSpriteframes(sprite){
+        //Death override animation
+        if (this.image === this.sprites.death.image) {
+            if(this.numFrames === this.sprites.death.maxFrames - 1)
+            this.dead = true;
+            return; 
+        }
+        //Override animations when attacking
         if (this.image === this.sprites.attack1.image && 
             this.numFrames < this.sprites.attack1.maxFrames - 1
             ) return;  
+
+        // Override when gets hit
+        if(this.image === this.sprites.hit.image && this.numFrames  < this.sprites.hit.maxFrames - 1)
+        return;
 
         switch (sprite){
             case 'idle':
@@ -161,6 +181,21 @@ class Fighter extends Sprite{ // all methods in sprite are avalible for fighter
                 if(this.image != this.sprites.attack1.image) {
                     this.image = this.sprites.attack1.image;
                     this.maxFrames = this.sprites.attack1.maxFrames;
+                    this.numFrames = 0;
+                }
+                break;
+                
+            case 'hit':
+                if(this.image != this.sprites.hit.image) {
+                    this.image = this.sprites.hit.image;
+                    this.maxFrames = this.sprites.hit.maxFrames;
+                    this.numFrames = 0;
+                }
+                break;
+            case 'death':
+                if(this.image != this.sprites.death.image) {
+                    this.image = this.sprites.death.image;
+                    this.maxFrames = this.sprites.death.maxFrames;
                     this.numFrames = 0;
                 }
                 break;
