@@ -42,12 +42,29 @@ const player = new Fighter({
         y: 0
     },
     color: 'yellow',
-    imageSrc: 'img/Manzo/Idle.png',
-    maxFrames: 8,
     scale: 2.5,
     offset: {
         x: 150,
-        y: 110
+        y: 105
+    },
+    sprites: {
+        idle: {
+            imageSrc: 'img/Manzo/Idle.png',
+            maxFrames: 8
+        },
+        run: {
+            imageSrc: 'img/Manzo/Run.png',
+            maxFrames: 8
+        },
+        jump: {
+            imageSrc: 'img/Manzo/Jump.png',
+            maxFrames: 2
+        },
+        fall: {
+            imageSrc: 'img/Manzo/Fall.png',
+            maxFrames: 2
+
+        }
     }
 })
 
@@ -97,23 +114,36 @@ function animate() {
     background.update(); // calling to establish background image
     player.update();
     shop.update();
-    enemy.update();
+    //enemy.update();
 
     player.velocity.x = 0;  // Created a responisve and functional movement system to inputs are interpretted correctly
     enemy.velocity.x = 0;
 
     // Main Player movement
+
     if(keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5;
+        player.switchSpriteframes('run');
     } else if (keys.d.pressed && player.lastKey === 'd') {
         player.velocity.x = 5;
+        player.switchSpriteframes('run');
+    } else{ // Idle animation when there is no other animation activated
+        player.switchSpriteframes('idle');
     }
 
     //Enemy Player movement
+
     if(keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5;
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5;
+    }
+
+    //Animate jump movement when jumping, also when falling
+    if (player.velocity.y < 0){ 
+        player.switchSpriteframes('jump');
+    } else if (player.velocity.y > 0) {
+        player.switchSpriteframes('fall');
     }
 
     // Collison detection module -- only when attack box is overlapping enemy sprite x and y axis considered
