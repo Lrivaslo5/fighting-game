@@ -64,6 +64,14 @@ const player = new Fighter({
             imageSrc: 'img/Manzo/Attack1.png',
             maxFrames: 4
         }
+    },
+    attackBox: {
+        offset: {
+            x: 100,
+            y: 50,
+        },
+        width: 100,
+        height: 50
     }
 })
 
@@ -105,8 +113,16 @@ const enemy = new Fighter({
         },
         attack1: {
             imageSrc: 'img/mazo-alt/Attack1.png',
-            maxFrames: 6
+            maxFrames: 4
         }
+    },
+    attackBox: {
+        offset: {
+            x: -100,
+            y: 50,
+        },
+        width: 100,
+        height: 50
     }
 })
 
@@ -190,24 +206,37 @@ function animate() {
             rectangle1: player,
             rectangle2: enemy
         }) &&
-        player.isAttacking
+        player.isAttacking && player.numFrames === 2
     ){
         player.isAttacking = false;
-        enemy.health -= 20;
+        enemy.health -= 15;
         document.querySelector('#enemy-health').style.width = enemy.health + "%";
         console.log('hit');   
     } 
+
+    // if player misses, reset "is attacking" condition
+    if(player.isAttacking && player.numFrames === 2) {
+        player.isAttacking = false;
+    }
+
+//Enemy conllision detection module
+
     if(
         rectangularCollision({
             rectangle1: enemy,
             rectangle2: player
         }) &&
-        enemy.isAttacking
+        enemy.isAttacking && enemy.numFrames === 2
     ){
     enemy.isAttacking = false;
-    player.health -= 20;
+    player.health -= 15;
     document.querySelector('#player-health').style.width = player.health + "%";
     console.log('enemy hit you');  
+    }
+
+    // if enemy misses, reset "is attacking" condition
+    if(enemy.isAttacking && enemy.numFrames === 2) {
+        enemy.isAttacking = false;
     }
 
     // Game ending based on health
@@ -258,11 +287,8 @@ window.addEventListener('keydown' , (event) => {
             break
 
         case 'ArrowDown':
-            enemy.isAttacking = true;
-            setTimeout(() => {
-                enemy.isAttacking = false
-            }, 100)
-            break 
+           enemy.attack()
+           break 
     }
     console.log(event.key);
 })
